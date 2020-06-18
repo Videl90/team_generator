@@ -12,53 +12,57 @@ const render = require("./lib/htmlRenderer");
 
 const members = [];
 
-const questions = [
-    {
-        type: "input",
-        name: "name",
-        message: "Enter your name"
-    },
-    {
-        type: "list",
-        name: "role",
-        message: "Enter your role",
-        choices: ["Manager", "Engineer", "Intern"]
-    },
-    {
-        type: "input",
-        name: "id",
-        message: "Enter your ID number"
-    },
-    {
-        type: "input",
-        name: "email",
-        message: "Enter your email"
-    },
 
-    {
-        type: "input",
-        name: "school",
-        message: "Enter your school name",
-        'when':(answers) => answers.role === 'Intern'
-    },
-    {
-        type: "input",
-        name: "office",
-        message: "Enter your office number",
-        'when':(answers) => answers.role === 'Manager'
-    },
-    {
-        type: "input",
-        name: "github",
-        message: "Enter your GitHub username",
-        'when':(answers) => answers.role === 'Engineer'
-    },
-]
+function teamMembersInfo (){
+    const questions = [
+        {
+            type: "list",
+            name: "role",
+            message: "Enter the member's role",
+            choices: ["Manager", "Engineer", "Intern"]
+        },
+        {
+            type: "input",
+            name: "id",
+            message: "Enter member ID number"
+        },
+        {
+            type: "input",
+            name: "email",
+            message: "Enter member email"
+        },
+    
+        {
+            type: "input",
+            name: "school",
+            message: "Enter member school name",
+            'when':(answers) => answers.role === 'Intern'
+        },
+        {
+            type: "input",
+            name: "office",
+            message: "Enter member office number",
+            'when':(answers) => answers.role === 'Manager'
+        },
+        {
+            type: "input",
+            name: "github",
+            message: "Enter member GitHub username",
+            'when':(answers) => answers.role === 'Engineer'
+        }
+    ];
+    
+    inquirer.prompt(questions).then(async (answers) => {
+        let engineer = new Engineer(answers.name, answers.role, answers.id, answers.email, answers.github)
+        members.push(engineer);
+        let manager = new Manager(answers.name, answers.role, answers.id, answers.email, answers.office)
+        members.push(manager);
+        let intern = new Intern(answers.name, answers.role, answers.id, answers.email, answers.school)
+        members.push(intern);
+    })
+}
 
-inquirer.prompt(questions).then(async (answers) => {
-    const engineer = new Engineer(name, role, id, email, github);
-    console.log(answers)
-})
+teamMembersInfo();
 
 
 
