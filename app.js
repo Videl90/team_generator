@@ -10,12 +10,31 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-const members = [];
+const allMembers = [];
 
-managerInfo();
+function newMember() {
+    inquirer.prompt([
+        {
+            type: "list",
+            name: "member",
+            message: "Which role has the new member?",
+            choices: ["Manager", "Engineer", "Intern", "I'm done adding members"]
+        }
+    ]).then(info => {
+        if(info.member === "Manager"){
+            managerInfo();
+        } else if(info.member === "Engineer"){
+            engineerInfo();
+        } else if(info.member === "Intern"){
+            internInfo();
+        } else if(info.member === "I'm done adding members") {
+            generateHTML(outputPath, render(allMembers));
+        }
+    })
+}
 
 function managerInfo() {
-    const managerQuestions = [
+    inquirer.prompt([
         {
             type: "input",
             name: "name",
@@ -38,26 +57,18 @@ function managerInfo() {
         },
         {
             type: "input",
-            name: "office",
+            name: "officeNumber",
             message: "Enter your office number"
-        },
-    ]
-
-    inquirer.prompt(managerQuestions).then(async (managerAnswers) => {
-        let manager = new Manager(managerAnswers.name, managerAnswers.role, managerAnswers.id, managerAnswers.email, managerAnswers.office)
-        members.push(manager);
-        teamMembersInfo();
+        }
+    ]).then((answers) => {
+        let manager = new Manager(answers.name, answers.role, answers.id, answers.email, answers.officeNumber)
+        allMembers.push(manager);
+        newMember();
     });
     
 }
-function teamMembersInfo (){
-    const questions = [
-        {
-            type: "list",
-            name: "role",
-            message: "Enter the member's role",
-            choices: ["Manager", "Engineer", "Intern", "My team is complete"]
-        },
+function engineerInfo() {
+    inquirer.prompt([
         {
             type: "input",
             name: "name",
@@ -73,34 +84,50 @@ function teamMembersInfo (){
             name: "email",
             message: "Enter member's email"
         },
-    
         {
             type: "input",
-            name: "school",
-            message: "Enter member's school name",
-            'when':(answers) => answers.role === 'Intern'
+            name: "user",
+            message: "Enter member's GitHub username",
+        }
+    ]).then((answers) => {
+        let engineer = new Engineer(answers.name, answers.role, answers.id, answers.email, answers.github)
+        allMembers.push(engineer);
+        newMember();
+    })
+}
+
+function internInfo() {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "name",
+            message: "Enter member's name"
         },
         {
             type: "input",
-            name: "github",
-            message: "Enter member's GitHub username",
-            'when':(answers) => answers.role === 'Engineer'
+            name: "id",
+            message: "Enter member's ID number"
+        },
+        {
+            type: "input",
+            name: "email",
+            message: "Enter member's email"
+        },
+        {
+            type: "input",
+            name: "school",
+            message: "Enter member's school",
         }
-    ];
-    
-    inquirer.prompt(questions).then(async (answers) => {
-        let engineer = new Engineer(answers.name, answers.role, answers.id, answers.email, answers.github)
-        members.push(engineer);
-        let intern = new Intern(answers.name, answers.role, answers.id, answers.email, answers.school)
-        members.push(intern);
-    });
-    if(answers.role === "My team is complete") {
-        generateHTML(outputPath, render(members));
-    }
+    ]).then((answers) => {
+        let intern = new Intern(answers.name, answers.role, answers.id, answers.email, answers.school);
+        allMembers.push(intern);
+        newMember();
+    })
 }
 
-function generateHTML(fileName, data) {
-    fs.writeFile(fileName, data, "utf8", function (err) {
+
+function generateHTML(info, file) {
+    fs.writeFile(info, file, (err) => {
       if (err) {
         throw err;
       }
@@ -108,6 +135,8 @@ function generateHTML(fileName, data) {
     });
   };
 
+
+newMember();
 
 
 
