@@ -12,42 +12,78 @@ const render = require("./lib/htmlRenderer");
 
 const members = [];
 
+managerInfo();
 
+function managerInfo() {
+    const managerQuestions = [
+        {
+            type: "input",
+            name: "name",
+            message: "Enter your name"
+        },
+        {
+            type: "input",
+            name: "role",
+            message: "Enter your role"
+        },
+        {
+            type: "input",
+            name: "id",
+            message: "Enter your id"
+        },
+        {
+            type: "input",
+            name: "email",
+            message: "Enter your email"
+        },
+        {
+            type: "input",
+            name: "office",
+            message: "Enter your office number"
+        },
+    ]
+
+    inquirer.prompt(managerQuestions).then(async (managerAnswers) => {
+        let manager = new Manager(managerAnswers.name, managerAnswers.role, managerAnswers.id, managerAnswers.email, managerAnswers.office)
+        members.push(manager);
+        teamMembersInfo();
+    });
+    
+}
 function teamMembersInfo (){
     const questions = [
         {
             type: "list",
             name: "role",
             message: "Enter the member's role",
-            choices: ["Manager", "Engineer", "Intern"]
+            choices: ["Manager", "Engineer", "Intern", "My team is complete"]
+        },
+        {
+            type: "input",
+            name: "name",
+            message: "Enter member's name"
         },
         {
             type: "input",
             name: "id",
-            message: "Enter member ID number"
+            message: "Enter member's ID number"
         },
         {
             type: "input",
             name: "email",
-            message: "Enter member email"
+            message: "Enter member's email"
         },
     
         {
             type: "input",
             name: "school",
-            message: "Enter member school name",
+            message: "Enter member's school name",
             'when':(answers) => answers.role === 'Intern'
         },
         {
             type: "input",
-            name: "office",
-            message: "Enter member office number",
-            'when':(answers) => answers.role === 'Manager'
-        },
-        {
-            type: "input",
             name: "github",
-            message: "Enter member GitHub username",
+            message: "Enter member's GitHub username",
             'when':(answers) => answers.role === 'Engineer'
         }
     ];
@@ -55,14 +91,26 @@ function teamMembersInfo (){
     inquirer.prompt(questions).then(async (answers) => {
         let engineer = new Engineer(answers.name, answers.role, answers.id, answers.email, answers.github)
         members.push(engineer);
-        let manager = new Manager(answers.name, answers.role, answers.id, answers.email, answers.office)
-        members.push(manager);
         let intern = new Intern(answers.name, answers.role, answers.id, answers.email, answers.school)
         members.push(intern);
-    })
+    });
+    if(answers.role === "My team is complete") {
+        generateHTML(outputPath, render(members));
+    }
 }
 
-teamMembersInfo();
+function generateHTML(fileName, data) {
+    fs.writeFile(fileName, data, "utf8", function (err) {
+      if (err) {
+        throw err;
+      }
+      console.log("Your team is complete!");
+    });
+  };
+
+
+
+
 
 
 
