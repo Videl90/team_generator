@@ -42,11 +42,6 @@ function managerInfo() {
         },
         {
             type: "input",
-            name: "role",
-            message: "Enter your role"
-        },
-        {
-            type: "input",
             name: "id",
             message: "Enter your id"
         },
@@ -61,7 +56,7 @@ function managerInfo() {
             message: "Enter your office number"
         }
     ]).then((answers) => {
-        let manager = new Manager(answers.name, answers.role, answers.id, answers.email, answers.officeNumber)
+        let manager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber)
         allMembers.push(manager);
         newMember();
     });
@@ -90,7 +85,7 @@ function engineerInfo() {
             message: "Enter member's GitHub username",
         }
     ]).then((answers) => {
-        let engineer = new Engineer(answers.name, answers.role, answers.id, answers.email, answers.github)
+        let engineer = new Engineer(answers.name, answers.id, answers.email, answers.user)
         allMembers.push(engineer);
         newMember();
     })
@@ -119,7 +114,7 @@ function internInfo() {
             message: "Enter member's school",
         }
     ]).then((answers) => {
-        let intern = new Intern(answers.name, answers.role, answers.id, answers.email, answers.school);
+        let intern = new Intern(answers.name, answers.id, answers.email, answers.school);
         allMembers.push(intern);
         newMember();
     })
