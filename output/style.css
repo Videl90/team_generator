@@ -1,0 +1,59 @@
+body {
+    background-color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+}
+
+#header {
+    background-color: #606a8c;
+}
+
+.card-header{
+    background-color: #e0b1d0;
+}
+
+h1 {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.employee-card {
+    border: 1px solid #e0b1d0;
+    margin-left: 20px;
+}
+
+
+.list-group-item{
+    font-weight: 400;
+    color: #606a8c;
+}
+
+.card-title {
+    margin-bottom: 5px;
+}
+
+i {
+    color: #ffffff;
+}
+
+h2 {
+    color: #31333b;
+    font-size: 24px;
+}
+
+h3 {
+    color: #31333b;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+a {
+    color: #e0b1d0;
+}
+
+a:hover {
+    color: #b3488f;
+}
+
+.field {
+    font-weight: bold;
+}
